@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  background-color: #FFFDF6;
+  color: #2D3748;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #FFFDF6;
+}
+
+.menu-item-text {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+}
+
+.sidebar-collapsed .menu-item-text {
+  opacity: 0;
+  visibility: hidden;
+  width: 0;
+  margin: 0;
+}
+
+.sidebar {
+  transition: width 0.3s ease;
+}
+
+.sidebar-collapsed {
+  width: 64px;
+}
+
+.sidebar-expanded {
+  width: 240px;
+}
+
+.content-area {
+  transition: margin-left 0.3s ease;
+}
+
+.content-area-collapsed {
+  margin-left: 64px;
+}
+
+.content-area-expanded {
+  margin-left: 240px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  margin: 0.25rem 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-collapsed .menu-item {
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.menu-item:hover {
+  background-color: #DDEB9D;
+}
+
+.menu-item.active {
+  background-color: #A0C878;
+  color: white;
+}
+
+.menu-icon {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 1rem;
+  transition: margin 0.2s ease;
+}
+
+.sidebar-collapsed .menu-icon {
+  margin-right: 0;
+}
+
+.toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: #A0C878;
+  position: absolute;
+  top: 1rem;
+  right: -1rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.3s ease, background-color 0.2s ease;
+  color: white;
+}
+
+.toggle-btn:hover {
+  background-color: #DDEB9D;
+  color: #2D3748;
+}
+
+.toggle-icon {
+  transition: transform 0.3s ease;
+}
+
+.toggle-icon-collapsed {
+  transform: rotate(180deg);
+}
