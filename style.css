@@ -21,6 +21,16 @@ body {
   background-color: #FFFDF6;
 }
 
+#modeToggleBtn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  transition: transform 0.3s ease;
+}
+
+#timer {
+  transition: all 0.3s ease;
+}
+
 .menu-item-text {
   opacity: 1;
   transition: opacity 0.3s ease;

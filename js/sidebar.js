@@ -8,7 +8,7 @@ export class Sidebar {
     this.toggleBtnEl = null;
     this.toggleIconEl = null;
     this.menuItems = [
-      { id: 'timer', icon: icons.timer, text: 'Pomodoro' },
+      { id: 'timer', icon: icons.timer, text: 'Timer' },
       { id: 'stats', icon: icons.stats, text: 'Statistics' },
       { id: 'settings', icon: icons.settings, text: 'Settings' }
     ];
@@ -94,9 +94,13 @@ export class Sidebar {
     const content = document.createElement('div');
     content.innerHTML = `
       <div class="max-w-2xl mx-auto">
-        <h1 class="text-3xl font-bold mb-8 text-center text-gray-800">Pomodoro Timer</h1>
         <div class="bg-secondary-bg rounded-lg shadow-md p-8 text-center">
-          <div class="text-6xl font-bold mb-8 text-gray-800" id="timer">25:00</div>
+          <div class="flex items-center justify-center gap-4 mb-8">
+            <button id="modeToggleBtn" class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full hover:bg-accent transition-all duration-300">
+              ${icons.chevronLeft}
+            </button>
+            <div class="text-6xl font-bold text-gray-800" id="timer">00:00:00</div>
+          </div>
           <div class="flex justify-center gap-4">
             <button id="startBtn" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-accent hover:text-gray-800 transition-colors">
               Start
@@ -105,7 +109,7 @@ export class Sidebar {
               Reset
             </button>
           </div>
-          <div class="mt-8 grid grid-cols-3 gap-4">
+          <div id="pomodoroStats" class="mt-8 grid grid-cols-3 gap-4 hidden">
             <div class="bg-accent/30 p-4 rounded-lg">
               <h3 class="font-medium text-gray-800">Focus Time</h3>
               <p class="text-2xl font-bold text-gray-800">25:00</p>

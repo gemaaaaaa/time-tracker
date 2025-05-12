@@ -1,14 +1,17 @@
 export class Pomodoro {
   constructor() {
-    this.timeLeft = 25 * 60;
+    this.timeLeft = 0;
     this.isRunning = false;
     this.timer = null;
     this.sessions = 0;
+    this.mode = 'tracker'; // Default mode is time tracker
     
     this.timerDisplay = document.getElementById('timer');
     this.startBtn = document.getElementById('startBtn');
     this.resetBtn = document.getElementById('resetBtn');
     this.sessionsDisplay = document.getElementById('sessions');
+    this.modeToggleBtn = document.getElementById('modeToggleBtn');
+    this.pomodoroStats = document.getElementById('pomodoroStats');
     
     this.init();
   }
@@ -16,7 +19,17 @@ export class Pomodoro {
   init() {
     this.startBtn.addEventListener('click', () => this.toggleTimer());
     this.resetBtn.addEventListener('click', () => this.resetTimer());
+    this.modeToggleBtn.addEventListener('click', () => this.toggleMode());
     this.updateDisplay();
+    this.updateButtonText();
+  }
+  
+  toggleMode() {
+    this.pauseTimer();
+    this.mode = this.mode === 'tracker' ? 'pomodoro' : 'tracker';
+    this.pomodoroStats.classList.toggle('hidden', this.mode === 'tracker');
+    this.resetTimer();
+    this.updateButtonText();
   }
   
   toggleTimer() {
@@ -37,10 +50,14 @@ export class Pomodoro {
     if (!this.isRunning) {
       this.isRunning = true;
       this.timer = setInterval(() => {
-        this.timeLeft--;
+        if (this.mode === 'tracker') {
+          this.timeLeft++;
+        } else {
+          this.timeLeft--;
+        }
         this.updateDisplay();
         
-        if (this.timeLeft === 0) {
+        if (this.mode === 'pomodoro' && this.timeLeft === 0) {
           this.completeSession();
         }
       }, 1000);
@@ -54,11 +71,15 @@ export class Pomodoro {
   
   resetTimer() {
     this.pauseTimer();
-    this.timeLeft = 25 * 60;
+    this.timeLeft = this.mode === 'pomodoro' ? 25 * 60 : 0;
     this.updateDisplay();
     this.startBtn.textContent = 'Start';
     this.startBtn.classList.replace('bg-red-600', 'bg-primary');
     this.startBtn.classList.replace('hover:bg-red-700', 'hover:bg-accent');
+  }
+  
+  updateButtonText() {
+    this.resetBtn.textContent = this.mode === 'tracker' ? 'Stop' : 'Reset';
   }
   
   completeSession() {
@@ -70,9 +91,16 @@ export class Pomodoro {
   }
   
   updateDisplay() {
-    const minutes = Math.floor(this.timeLeft / 60);
-    const seconds = this.timeLeft % 60;
-    this.timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    if (this.mode === 'tracker') {
+      const hours = Math.floor(this.timeLeft / 3600);
+      const minutes = Math.floor((this.timeLeft % 3600) / 60);
+      const seconds = this.timeLeft % 60;
+      this.timerDisplay.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    } else {
+      const minutes = Math.floor(this.timeLeft / 60);
+      const seconds = this.timeLeft % 60;
+      this.timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
   }
   
   playNotification() {
