@@ -132,3 +132,19 @@ body {
 .toggle-icon-collapsed {
   transform: rotate(180deg);
 }
+
+.project-item {
+  @apply bg-white rounded-lg shadow p-4 flex justify-between items-center;
+}
+
+.project-info {
+  @apply flex-1;
+}
+
+.project-name {
+  @apply text-lg font-semibold mb-1;
+}
+
+.project-timer {
+  @apply text-2xl font-bold text-primary;
+}

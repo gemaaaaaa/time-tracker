@@ -93,7 +93,7 @@ export class Sidebar {
     
     const content = document.createElement('div');
     content.innerHTML = `
-      <div class="max-w-2xl mx-auto">
+      <div class="max-w-4xl mx-auto">
         <div class="bg-secondary-bg rounded-lg shadow-md p-8 text-center">
           <div class="flex items-center justify-center gap-4 mb-8">
             <button id="modeToggleBtn" class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full hover:bg-accent transition-all duration-300">
@@ -121,6 +121,21 @@ export class Sidebar {
             <div class="bg-accent/30 p-4 rounded-lg">
               <h3 class="font-medium text-gray-800">Sessions</h3>
               <p class="text-2xl font-bold text-gray-800" id="sessions">0</p>
+            </div>
+          </div>
+          
+          <hr class="my-8 border-gray-300" />
+          
+          <div class="projects-section">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-2xl font-bold text-left">Projects</h2>
+              <button id="addProjectBtn" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-accent hover:text-gray-800 transition-colors">
+                Add Project
+              </button>
+            </div>
+            
+            <div id="projectsList" class="space-y-4">
+              <!-- Project items will be added here dynamically -->
             </div>
           </div>
         </div>
