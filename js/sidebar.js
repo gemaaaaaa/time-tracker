@@ -101,7 +101,7 @@ export class Sidebar {
             </button>
             <div class="text-6xl font-bold text-gray-800" id="timer">00:00:00</div>
           </div>
-          <div class="flex justify-center gap-4">
+          <div id="buttonsContainer" class="flex justify-center gap-4">
             <button id="startBtn" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-accent hover:text-gray-800 transition-colors">
               Start
             </button>
