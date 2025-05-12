@@ -109,6 +109,7 @@ export class Sidebar {
               Reset
             </button>
           </div>
+          
           <div id="pomodoroStats" class="mt-8 grid grid-cols-3 gap-4 hidden">
             <div class="bg-accent/30 p-4 rounded-lg">
               <h3 class="font-medium text-gray-800">Focus Time</h3>
@@ -128,7 +129,7 @@ export class Sidebar {
           
           <div class="projects-section">
             <div class="flex justify-between items-center mb-6">
-              <h2 class="text-2xl font-bold text-left">Projects</h2>
+              <h2 class="text-2xl font-bold">Projects</h2>
               <button id="addProjectBtn" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-accent hover:text-gray-800 transition-colors">
                 Add Project
               </button>

@@ -6,6 +6,7 @@ export class Pomodoro {
     this.sessions = 0;
     this.mode = 'tracker'; // Default mode is time tracker
     this.projects = [];
+    this.activeProjectId = null;
     
     this.timerDisplay = document.getElementById('timer');
     this.startBtn = document.getElementById('startBtn');
@@ -20,8 +21,6 @@ export class Pomodoro {
   }
   
   init() {
-    this.startBtn.addEventListener('click', () => this.toggleTimer());
-    this.resetBtn.addEventListener('click', () => this.resetTimer());
     this.modeToggleBtn.addEventListener('click', () => this.toggleMode());
     this.addProjectBtn.addEventListener('click', () => this.addNewProject());
     this.updateDisplay();
@@ -35,7 +34,8 @@ export class Pomodoro {
       const project = {
         id: Date.now(),
         name: projectName,
-        timeSpent: 0
+        timeSpent: 0,
+        isRunning: false
       };
       this.projects.push(project);
       this.saveProjects();
@@ -60,37 +60,97 @@ export class Pomodoro {
     
     this.projects.forEach(project => {
       const projectEl = document.createElement('div');
-      projectEl.className = 'project-item mb-4';
-      projectEl.innerHTML = `
-        <div class="project-info">
-          <h3 class="project-name">${project.name}</h3>
-          <div class="project-timer">${this.formatTime(project.timeSpent)}</div>
-        </div>
-        <button class="start-project-btn px-4 py-2 bg-primary text-white rounded-lg hover:bg-accent hover:text-gray-800 transition-colors"
-          data-project-id="${project.id}">
-          Start
+      projectEl.className = 'project-item mb-4 flex items-center gap-4 bg-white rounded-lg shadow p-4';
+      
+      const playButton = `
+        <button class="play-btn w-8 h-8 flex items-center justify-center rounded-full ${project.isRunning ? 'bg-red-600 hover:bg-red-700' : 'bg-primary hover:bg-accent hover:text-gray-800'} text-white transition-colors" data-project-id="${project.id}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            ${project.isRunning ? 
+              '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clip-rule="evenodd"/>' :
+              '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>'
+            }
+          </svg>
         </button>
       `;
       
+      projectEl.innerHTML = `
+        ${playButton}
+        <h3 class="text-lg font-semibold flex-1">${project.name}</h3>
+        <div class="text-2xl font-bold text-primary">${this.formatTime(project.timeSpent)}</div>
+      `;
+      
       this.projectsList.appendChild(projectEl);
-    });
-    
-    // Add event listeners to project start buttons
-    const startButtons = this.projectsList.querySelectorAll('.start-project-btn');
-    startButtons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const projectId = parseInt(e.target.dataset.projectId);
-        this.startProjectTimer(projectId);
-      });
+      
+      // Add click handler for the play button
+      const playBtn = projectEl.querySelector('.play-btn');
+      playBtn.addEventListener('click', () => this.toggleProjectTimer(project.id));
     });
   }
   
-  startProjectTimer(projectId) {
+  toggleProjectTimer(projectId) {
     const project = this.projects.find(p => p.id === projectId);
-    if (project) {
-      // Implementation for starting project timer
-      console.log(`Starting timer for project: ${project.name}`);
+    if (!project) return;
+    
+    // Stop other running projects
+    if (!project.isRunning) {
+      this.projects.forEach(p => {
+        if (p.id !== projectId && p.isRunning) {
+          p.isRunning = false;
+        }
+      });
     }
+    
+    project.isRunning = !project.isRunning;
+    this.activeProjectId = project.isRunning ? projectId : null;
+    
+    if (project.isRunning) {
+      this.startTimer();
+    } else if (!this.projects.some(p => p.isRunning)) {
+      this.pauseTimer();
+    }
+    
+    this.saveProjects();
+    this.renderProjects();
+  }
+  
+  startTimer() {
+    if (!this.isRunning) {
+      this.isRunning = true;
+      this.timer = setInterval(() => {
+        if (this.mode === 'tracker') {
+          this.timeLeft++;
+          
+          // Update active project time
+          if (this.activeProjectId) {
+            const activeProject = this.projects.find(p => p.id === this.activeProjectId);
+            if (activeProject) {
+              activeProject.timeSpent++;
+              this.saveProjects();
+              this.renderProjects();
+            }
+          }
+        } else {
+          this.timeLeft--;
+          if (this.timeLeft === 0) {
+            this.completeSession();
+          }
+        }
+        
+        this.updateDisplay();
+      }, 1000);
+      
+      this.startBtn.textContent = 'Pause';
+      this.startBtn.classList.replace('bg-primary', 'bg-red-600');
+      this.startBtn.classList.replace('hover:bg-accent', 'hover:bg-red-700');
+    }
+  }
+  
+  pauseTimer() {
+    this.isRunning = false;
+    clearInterval(this.timer);
+    this.startBtn.textContent = 'Start';
+    this.startBtn.classList.replace('bg-red-600', 'bg-primary');
+    this.startBtn.classList.replace('hover:bg-red-700', 'hover:bg-accent');
   }
   
   toggleMode() {
@@ -101,50 +161,10 @@ export class Pomodoro {
     this.updateButtonText();
   }
   
-  toggleTimer() {
-    if (this.isRunning) {
-      this.pauseTimer();
-      this.startBtn.textContent = 'Start';
-      this.startBtn.classList.replace('bg-red-600', 'bg-primary');
-      this.startBtn.classList.replace('hover:bg-red-700', 'hover:bg-accent');
-    } else {
-      this.startTimer();
-      this.startBtn.textContent = 'Pause';
-      this.startBtn.classList.replace('bg-primary', 'bg-red-600');
-      this.startBtn.classList.replace('hover:bg-accent', 'hover:bg-red-700');
-    }
-  }
-  
-  startTimer() {
-    if (!this.isRunning) {
-      this.isRunning = true;
-      this.timer = setInterval(() => {
-        if (this.mode === 'tracker') {
-          this.timeLeft++;
-        } else {
-          this.timeLeft--;
-        }
-        this.updateDisplay();
-        
-        if (this.mode === 'pomodoro' && this.timeLeft === 0) {
-          this.completeSession();
-        }
-      }, 1000);
-    }
-  }
-  
-  pauseTimer() {
-    this.isRunning = false;
-    clearInterval(this.timer);
-  }
-  
   resetTimer() {
     this.pauseTimer();
     this.timeLeft = this.mode === 'pomodoro' ? 25 * 60 : 0;
     this.updateDisplay();
-    this.startBtn.textContent = 'Start';
-    this.startBtn.classList.replace('bg-red-600', 'bg-primary');
-    this.startBtn.classList.replace('hover:bg-red-700', 'hover:bg-accent');
   }
   
   updateButtonText() {
