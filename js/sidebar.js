@@ -98,48 +98,48 @@ export class Sidebar {
     const content = document.createElement('div');
     content.innerHTML = `
       <div class="max-w-4xl mx-auto">
-        <div class="bg-secondary-bg rounded-lg shadow-md p-8 text-center">
-          <div class="flex items-center justify-center gap-4 mb-8">
+        <div class="bg-secondary-bg rounded-lg shadow-md p-4 md:p-8 text-center">
+          <div class="flex items-center justify-center gap-2 md:gap-4 mb-4 md:mb-8">
             <button id="modeToggleBtn" class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full hover:bg-accent transition-all duration-300">
               ${icons.chevronLeft}
             </button>
-            <div class="text-6xl font-bold text-gray-800" id="timer">00:00:00</div>
+            <div class="text-4xl md:text-6xl font-bold text-gray-800" id="timer">00:00:00</div>
           </div>
-          <div id="buttonsContainer" class="flex justify-center gap-4">
-            <button id="startBtn" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-accent hover:text-gray-800 transition-colors">
+          <div id="buttonsContainer" class="flex justify-center gap-2 md:gap-4">
+            <button id="startBtn" class="px-4 md:px-6 py-2 bg-primary text-white rounded-lg hover:bg-accent hover:text-gray-800 transition-colors text-sm md:text-base">
               Start
             </button>
-            <button id="resetBtn" class="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+            <button id="resetBtn" class="px-4 md:px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm md:text-base">
               Reset
             </button>
           </div>
           
-          <div id="pomodoroStats" class="mt-8 grid grid-cols-3 gap-4 hidden">
-            <div class="bg-accent/30 p-4 rounded-lg">
-              <h3 class="font-medium text-gray-800">Focus Time</h3>
-              <p class="text-2xl font-bold text-gray-800">25:00</p>
+          <div id="pomodoroStats" class="mt-6 md:mt-8 grid grid-cols-3 gap-2 md:gap-4 hidden">
+            <div class="bg-accent/30 p-2 md:p-4 rounded-lg">
+              <h3 class="font-medium text-gray-800 text-sm md:text-base">Focus Time</h3>
+              <p class="text-xl md:text-2xl font-bold text-gray-800">25:00</p>
             </div>
-            <div class="bg-accent/30 p-4 rounded-lg">
-              <h3 class="font-medium text-gray-800">Break Time</h3>
-              <p class="text-2xl font-bold text-gray-800">5:00</p>
+            <div class="bg-accent/30 p-2 md:p-4 rounded-lg">
+              <h3 class="font-medium text-gray-800 text-sm md:text-base">Break Time</h3>
+              <p class="text-xl md:text-2xl font-bold text-gray-800">5:00</p>
             </div>
-            <div class="bg-accent/30 p-4 rounded-lg">
-              <h3 class="font-medium text-gray-800">Sessions</h3>
-              <p class="text-2xl font-bold text-gray-800" id="sessions">0</p>
+            <div class="bg-accent/30 p-2 md:p-4 rounded-lg">
+              <h3 class="font-medium text-gray-800 text-sm md:text-base">Sessions</h3>
+              <p class="text-xl md:text-2xl font-bold text-gray-800" id="sessions">0</p>
             </div>
           </div>
           
-          <hr class="my-8 border-gray-300" />
+          <hr class="my-6 md:my-8 border-gray-300" />
           
           <div class="projects-section">
-            <div class="flex justify-between items-center mb-6">
-              <h2 class="text-2xl font-bold">Projects</h2>
-              <button id="addProjectBtn" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-accent hover:text-gray-800 transition-colors">
+            <div class="flex justify-between items-center mb-4 md:mb-6">
+              <h2 class="text-xl md:text-2xl font-bold">Projects</h2>
+              <button id="addProjectBtn" class="px-3 md:px-4 py-1.5 md:py-2 bg-primary text-white rounded-lg hover:bg-accent hover:text-gray-800 transition-colors text-sm md:text-base">
                 Add Project
               </button>
             </div>
             
-            <div id="projectsList" class="space-y-4">
+            <div id="projectsList" class="space-y-3 md:space-y-4">
               <!-- Project items will be added here dynamically -->
             </div>
           </div>
@@ -154,14 +154,12 @@ export class Sidebar {
   }
 
   createMobileNav() {
-    // Create bottom navigation trigger
     this.bottomNavEl = document.createElement('button');
     this.bottomNavEl.className = 'fixed bottom-4 left-1/2 -translate-x-1/2 bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg md:hidden z-50';
     this.bottomNavEl.setAttribute('aria-label', 'Open navigation menu');
     this.bottomNavEl.innerHTML = icons.timer;
     document.body.appendChild(this.bottomNavEl);
 
-    // Create bottom sheet
     this.bottomSheetEl = document.createElement('div');
     this.bottomSheetEl.className = 'fixed bottom-0 left-0 w-full bg-white rounded-t-2xl shadow-lg transform translate-y-full transition-transform duration-300 ease-in-out z-50 md:hidden';
     this.bottomSheetEl.setAttribute('aria-hidden', 'true');
@@ -197,7 +195,6 @@ export class Sidebar {
     bottomSheetContent.appendChild(nav);
     this.bottomSheetEl.appendChild(bottomSheetContent);
     
-    // Create overlay
     this.overlayEl = document.createElement('div');
     this.overlayEl.className = 'fixed inset-0 bg-black bg-opacity-50 opacity-0 pointer-events-none transition-opacity duration-300 z-40 md:hidden';
     
