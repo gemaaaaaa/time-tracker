@@ -19,6 +19,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background-color: #FFFDF6;
+  overscroll-behavior-y: contain;
 }
 
 #modeToggleBtn svg {
@@ -60,12 +61,14 @@ body {
   transition: margin-left 0.3s ease;
 }
 
-.content-area-collapsed {
-  margin-left: 64px;
-}
+@media (min-width: 768px) {
+  .content-area-collapsed {
+    margin-left: 64px;
+  }
 
-.content-area-expanded {
-  margin-left: 240px;
+  .content-area-expanded {
+    margin-left: 240px;
+  }
 }
 
 .menu-item {

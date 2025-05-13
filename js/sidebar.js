@@ -7,6 +7,9 @@ export class Sidebar {
     this.contentAreaEl = null;
     this.toggleBtnEl = null;
     this.toggleIconEl = null;
+    this.bottomSheetEl = null;
+    this.bottomNavEl = null;
+    this.overlayEl = null;
     this.menuItems = [
       { id: 'timer', icon: icons.timer, text: 'Timer' },
       { id: 'stats', icon: icons.stats, text: 'Statistics' },
@@ -18,13 +21,14 @@ export class Sidebar {
   
   init() {
     this.createSidebar();
+    this.createMobileNav();
     this.addEventListeners();
     this.setInitialState();
   }
   
   createSidebar() {
     this.sidebarEl = document.createElement('aside');
-    this.sidebarEl.className = 'sidebar sidebar-expanded fixed top-0 left-0 h-full bg-sidebar-bg text-sidebar-text z-10 shadow-lg';
+    this.sidebarEl.className = 'sidebar sidebar-expanded fixed top-0 left-0 h-full bg-sidebar-bg text-sidebar-text z-10 shadow-lg hidden md:block';
     this.sidebarEl.setAttribute('aria-label', 'Main sidebar navigation');
     
     const header = document.createElement('div');
@@ -89,7 +93,7 @@ export class Sidebar {
     this.sidebarEl.appendChild(nav);
     
     this.contentAreaEl = document.createElement('main');
-    this.contentAreaEl.className = 'content-area content-area-expanded min-h-screen p-8 bg-primary-bg';
+    this.contentAreaEl.className = 'content-area content-area-expanded min-h-screen p-8 bg-primary-bg md:ml-[240px]';
     
     const content = document.createElement('div');
     content.innerHTML = `
@@ -148,10 +152,124 @@ export class Sidebar {
     document.body.appendChild(this.sidebarEl);
     document.body.appendChild(this.contentAreaEl);
   }
+
+  createMobileNav() {
+    // Create bottom navigation trigger
+    this.bottomNavEl = document.createElement('button');
+    this.bottomNavEl.className = 'fixed bottom-4 left-1/2 -translate-x-1/2 bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg md:hidden z-50';
+    this.bottomNavEl.setAttribute('aria-label', 'Open navigation menu');
+    this.bottomNavEl.innerHTML = icons.timer;
+    document.body.appendChild(this.bottomNavEl);
+
+    // Create bottom sheet
+    this.bottomSheetEl = document.createElement('div');
+    this.bottomSheetEl.className = 'fixed bottom-0 left-0 w-full bg-white rounded-t-2xl shadow-lg transform translate-y-full transition-transform duration-300 ease-in-out z-50 md:hidden';
+    this.bottomSheetEl.setAttribute('aria-hidden', 'true');
+    
+    const bottomSheetContent = document.createElement('div');
+    bottomSheetContent.className = 'p-4';
+    
+    const handle = document.createElement('div');
+    handle.className = 'w-12 h-1 bg-gray-300 rounded-full mx-auto mb-4 handle';
+    
+    const nav = document.createElement('nav');
+    nav.className = 'space-y-4';
+    
+    this.menuItems.forEach(item => {
+      const menuItem = document.createElement('a');
+      menuItem.href = '#' + item.id;
+      menuItem.className = 'flex items-center p-3 rounded-lg hover:bg-accent transition-colors';
+      
+      const icon = document.createElement('span');
+      icon.className = 'w-6 h-6 mr-3';
+      icon.innerHTML = item.icon;
+      
+      const text = document.createElement('span');
+      text.className = 'text-lg';
+      text.textContent = item.text;
+      
+      menuItem.appendChild(icon);
+      menuItem.appendChild(text);
+      nav.appendChild(menuItem);
+    });
+    
+    bottomSheetContent.appendChild(handle);
+    bottomSheetContent.appendChild(nav);
+    this.bottomSheetEl.appendChild(bottomSheetContent);
+    
+    // Create overlay
+    this.overlayEl = document.createElement('div');
+    this.overlayEl.className = 'fixed inset-0 bg-black bg-opacity-50 opacity-0 pointer-events-none transition-opacity duration-300 z-40 md:hidden';
+    
+    document.body.appendChild(this.bottomSheetEl);
+    document.body.appendChild(this.overlayEl);
+    
+    this.setupBottomSheetInteractions();
+  }
+  
+  setupBottomSheetInteractions() {
+    const handle = this.bottomSheetEl.querySelector('.handle');
+    if (!handle) return;
+    
+    let startY = 0;
+    let currentY = 0;
+    let initialY = 0;
+    
+    const onTouchStart = (e) => {
+      startY = e.touches[0].clientY;
+      initialY = currentY;
+      this.bottomSheetEl.style.transition = 'none';
+      document.addEventListener('touchmove', onTouchMove, { passive: false });
+      document.addEventListener('touchend', onTouchEnd);
+    };
+    
+    const onTouchMove = (e) => {
+      e.preventDefault();
+      const deltaY = e.touches[0].clientY - startY;
+      currentY = initialY + deltaY;
+      if (currentY < 0) currentY = 0;
+      this.bottomSheetEl.style.transform = `translateY(${currentY}px)`;
+    };
+    
+    const onTouchEnd = () => {
+      this.bottomSheetEl.style.transition = 'transform 0.3s ease-in-out';
+      if (currentY > 100) {
+        this.closeBottomSheet();
+      } else {
+        this.openBottomSheet();
+      }
+      document.removeEventListener('touchmove', onTouchMove);
+      document.removeEventListener('touchend', onTouchEnd);
+    };
+    
+    handle.addEventListener('touchstart', onTouchStart);
+  }
+  
+  openBottomSheet() {
+    this.bottomSheetEl.style.transform = 'translateY(0)';
+    this.bottomSheetEl.setAttribute('aria-hidden', 'false');
+    this.overlayEl.classList.add('opacity-100');
+    this.overlayEl.classList.remove('pointer-events-none');
+  }
+  
+  closeBottomSheet() {
+    this.bottomSheetEl.style.transform = 'translateY(100%)';
+    this.bottomSheetEl.setAttribute('aria-hidden', 'true');
+    this.overlayEl.classList.remove('opacity-100');
+    this.overlayEl.classList.add('pointer-events-none');
+  }
   
   addEventListeners() {
     this.toggleBtnEl.addEventListener('click', () => {
       this.toggleSidebar();
+    });
+    
+    this.bottomNavEl.addEventListener('click', () => {
+      this.openBottomSheet();
+    });
+    
+    this.overlayEl.addEventListener('click', () => {
+      this.closeBottomSheet();
     });
     
     const menuLinks = this.sidebarEl.querySelectorAll('.menu-item');
@@ -163,9 +281,21 @@ export class Sidebar {
       });
     });
     
+    this.bottomSheetEl.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        this.closeBottomSheet();
+      });
+    });
+    
     this.sidebarEl.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.isExpanded) {
         this.toggleSidebar();
+      }
+    });
+    
+    this.bottomSheetEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        this.closeBottomSheet();
       }
     });
     
@@ -195,8 +325,11 @@ export class Sidebar {
   }
   
   handleResize() {
-    if (window.innerWidth < 768 && this.isExpanded) {
-      this.toggleSidebar();
+    if (window.innerWidth < 768) {
+      this.closeBottomSheet();
+      if (this.isExpanded) {
+        this.toggleSidebar();
+      }
     }
   }
   
