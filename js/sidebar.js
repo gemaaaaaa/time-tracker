@@ -13,7 +13,8 @@ export class Sidebar {
     this.menuItems = [
       { id: 'timer', icon: icons.timer, text: 'Timer' },
       { id: 'reports', icon: icons.reports, text: 'Reports' },
-      { id: 'journals', icon: icons.journals, text: 'Journals' }
+      { id: 'journals', icon: icons.journals, text: 'Journals' },
+      { id: 'settings', icon: icons.settings, text: 'Settings', isBottom: true }
     ];
     
     this.init();
@@ -57,39 +58,32 @@ export class Sidebar {
     this.sidebarEl.appendChild(this.toggleBtnEl);
     
     const nav = document.createElement('nav');
-    nav.className = 'mt-6 flex-1';
+    nav.className = 'mt-6 flex-1 flex flex-col';
     nav.setAttribute('aria-label', 'Main navigation');
     
     const menuList = document.createElement('ul');
     menuList.className = 'space-y-2';
     
-    this.menuItems.forEach(item => {
-      const menuItem = document.createElement('li');
-      
-      const menuLink = document.createElement('a');
-      menuLink.href = '#' + item.id;
-      menuLink.className = 'menu-item';
-      menuLink.setAttribute('aria-label', item.text);
-      
-      const menuIcon = document.createElement('span');
-      menuIcon.className = 'menu-icon';
-      menuIcon.innerHTML = item.icon;
-      
-      const menuText = document.createElement('span');
-      menuText.className = 'menu-item-text';
-      menuText.textContent = item.text;
-      
-      if (item.id === 'timer') {
-        menuLink.classList.add('active');
-      }
-      
-      menuLink.appendChild(menuIcon);
-      menuLink.appendChild(menuText);
-      menuItem.appendChild(menuLink);
-      menuList.appendChild(menuItem);
+    const mainMenuItems = this.menuItems.filter(item => !item.isBottom);
+    const bottomMenuItems = this.menuItems.filter(item => item.isBottom);
+    
+    mainMenuItems.forEach(item => {
+      menuList.appendChild(this.createMenuItem(item));
     });
     
     nav.appendChild(menuList);
+    
+    if (bottomMenuItems.length > 0) {
+      const bottomMenuList = document.createElement('ul');
+      bottomMenuList.className = 'space-y-2 mt-auto mb-4';
+      
+      bottomMenuItems.forEach(item => {
+        bottomMenuList.appendChild(this.createMenuItem(item));
+      });
+      
+      nav.appendChild(bottomMenuList);
+    }
+    
     this.sidebarEl.appendChild(nav);
     
     // Add profile section
@@ -181,6 +175,33 @@ export class Sidebar {
     
     document.body.appendChild(this.sidebarEl);
     document.body.appendChild(this.contentAreaEl);
+  }
+
+  createMenuItem(item) {
+    const menuItem = document.createElement('li');
+    
+    const menuLink = document.createElement('a');
+    menuLink.href = '#' + item.id;
+    menuLink.className = 'menu-item';
+    menuLink.setAttribute('aria-label', item.text);
+    
+    const menuIcon = document.createElement('span');
+    menuIcon.className = 'menu-icon';
+    menuIcon.innerHTML = item.icon;
+    
+    const menuText = document.createElement('span');
+    menuText.className = 'menu-item-text';
+    menuText.textContent = item.text;
+    
+    if (item.id === 'timer') {
+      menuLink.classList.add('active');
+    }
+    
+    menuLink.appendChild(menuIcon);
+    menuLink.appendChild(menuText);
+    menuItem.appendChild(menuLink);
+    
+    return menuItem;
   }
 
   createMobileNav() {
