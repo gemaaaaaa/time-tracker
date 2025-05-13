@@ -12,8 +12,8 @@ export class Sidebar {
     this.overlayEl = null;
     this.menuItems = [
       { id: 'timer', icon: icons.timer, text: 'Timer' },
-      { id: 'stats', icon: icons.stats, text: 'Statistics' },
-      { id: 'settings', icon: icons.settings, text: 'Settings' }
+      { id: 'reports', icon: icons.reports, text: 'Reports' },
+      { id: 'journals', icon: icons.journals, text: 'Journals' }
     ];
     
     this.init();
@@ -28,7 +28,7 @@ export class Sidebar {
   
   createSidebar() {
     this.sidebarEl = document.createElement('aside');
-    this.sidebarEl.className = 'sidebar sidebar-expanded fixed top-0 left-0 h-full bg-sidebar-bg text-sidebar-text z-10 shadow-lg hidden md:block';
+    this.sidebarEl.className = 'sidebar sidebar-expanded fixed top-0 left-0 h-full bg-sidebar-bg text-sidebar-text z-10 shadow-lg hidden md:flex flex-col';
     this.sidebarEl.setAttribute('aria-label', 'Main sidebar navigation');
     
     const header = document.createElement('div');
@@ -57,7 +57,7 @@ export class Sidebar {
     this.sidebarEl.appendChild(this.toggleBtnEl);
     
     const nav = document.createElement('nav');
-    nav.className = 'mt-6';
+    nav.className = 'mt-6 flex-1';
     nav.setAttribute('aria-label', 'Main navigation');
     
     const menuList = document.createElement('ul');
@@ -91,6 +91,36 @@ export class Sidebar {
     
     nav.appendChild(menuList);
     this.sidebarEl.appendChild(nav);
+    
+    // Add profile section
+    const profileSection = document.createElement('div');
+    profileSection.className = 'profile-section';
+    
+    const profileContent = document.createElement('div');
+    profileContent.className = 'profile-content';
+    
+    const profilePicture = document.createElement('div');
+    profilePicture.className = 'profile-picture';
+    profilePicture.innerHTML = '<span class="text-lg">U</span>';
+    
+    const profileInfo = document.createElement('div');
+    profileInfo.className = 'profile-info';
+    
+    const username = document.createElement('div');
+    username.className = 'font-medium text-gray-800';
+    username.textContent = 'User Name';
+    
+    const email = document.createElement('div');
+    email.className = 'text-sm text-gray-500';
+    email.textContent = 'user@example.com';
+    
+    profileInfo.appendChild(username);
+    profileInfo.appendChild(email);
+    profileContent.appendChild(profilePicture);
+    profileContent.appendChild(profileInfo);
+    profileSection.appendChild(profileContent);
+    
+    this.sidebarEl.appendChild(profileSection);
     
     this.contentAreaEl = document.createElement('main');
     this.contentAreaEl.className = 'content-area content-area-expanded min-h-screen p-8 bg-primary-bg md:ml-[240px]';
@@ -191,8 +221,37 @@ export class Sidebar {
       nav.appendChild(menuItem);
     });
     
+    // Add profile section to bottom sheet
+    const profileSection = document.createElement('div');
+    profileSection.className = 'border-t border-gray-200 mt-4 pt-4';
+    
+    const profileContent = document.createElement('div');
+    profileContent.className = 'flex items-center space-x-3 p-3';
+    
+    const profilePicture = document.createElement('div');
+    profilePicture.className = 'profile-picture';
+    profilePicture.innerHTML = '<span class="text-lg">U</span>';
+    
+    const profileInfo = document.createElement('div');
+    profileInfo.className = 'profile-info';
+    
+    const username = document.createElement('div');
+    username.className = 'font-medium text-gray-800';
+    username.textContent = 'User Name';
+    
+    const email = document.createElement('div');
+    email.className = 'text-sm text-gray-500';
+    email.textContent = 'user@example.com';
+    
+    profileInfo.appendChild(username);
+    profileInfo.appendChild(email);
+    profileContent.appendChild(profilePicture);
+    profileContent.appendChild(profileInfo);
+    profileSection.appendChild(profileContent);
+    
     bottomSheetContent.appendChild(handle);
     bottomSheetContent.appendChild(nav);
+    bottomSheetContent.appendChild(profileSection);
     this.bottomSheetEl.appendChild(bottomSheetContent);
     
     this.overlayEl = document.createElement('div');

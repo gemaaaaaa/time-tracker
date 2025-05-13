@@ -151,3 +151,35 @@ body {
 .project-timer {
   @apply text-2xl font-bold text-primary;
 }
+
+/* Profile section styles */
+.sidebar .profile-section {
+  @apply border-t border-sidebar-border mt-auto transition-all duration-300 ease-in-out;
+  padding: 1rem;
+}
+
+.sidebar-collapsed .profile-section {
+  @apply flex justify-center items-center;
+  padding: 1rem 0;
+}
+
+.profile-picture {
+  @apply w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 flex-shrink-0;
+  aspect-ratio: 1;
+}
+
+.profile-content {
+  @apply flex items-center transition-all duration-300 ease-in-out;
+}
+
+.sidebar-expanded .profile-content {
+  @apply space-x-3;
+}
+
+.sidebar-collapsed .profile-content {
+  @apply justify-center;
+}
+
+.sidebar-collapsed .profile-info {
+  display: none;
+}
