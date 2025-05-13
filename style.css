@@ -58,16 +58,18 @@ body {
 }
 
 .content-area {
-  transition: margin-left 0.3s ease;
+  transition: all 0.3s ease;
+  margin-left: 0;
+  width: 100%;
 }
 
 @media (min-width: 768px) {
   .content-area-collapsed {
-    margin-left: 64px;
+    padding-left: 64px;
   }
 
   .content-area-expanded {
-    margin-left: 240px;
+    padding-left: 240px;
   }
 }
 

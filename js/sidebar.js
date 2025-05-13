@@ -117,11 +117,12 @@ export class Sidebar {
     this.sidebarEl.appendChild(profileSection);
     
     this.contentAreaEl = document.createElement('main');
-    this.contentAreaEl.className = 'content-area content-area-expanded min-h-screen p-8 bg-primary-bg md:ml-[240px]';
+    this.contentAreaEl.className = 'content-area content-area-expanded min-h-screen p-8 bg-primary-bg';
     
     const content = document.createElement('div');
+    content.className = 'w-full flex justify-center';
     content.innerHTML = `
-      <div class="max-w-4xl mx-auto">
+      <div class="w-full max-w-4xl">
         <div class="bg-secondary-bg rounded-lg shadow-md p-4 md:p-8 text-center">
           <div class="flex items-center justify-center gap-2 md:gap-4 mb-4 md:mb-8">
             <button id="modeToggleBtn" class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full hover:bg-accent transition-all duration-300">
