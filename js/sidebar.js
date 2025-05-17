@@ -39,7 +39,7 @@ export class Sidebar {
     
     const logoText = document.createElement('h1');
     logoText.className = 'text-xl font-bold menu-item-text ml-2 text-primary';
-    logoText.textContent = 'Pomodoro';
+    logoText.textContent = 'Momentum';
     
     logo.appendChild(logoText);
     header.appendChild(logo);
